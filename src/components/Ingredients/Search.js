@@ -9,7 +9,7 @@ const Search = React.memo(props => {
   const inputRef = useRef();
 
   useEffect(() => {
-    setTimeout(() => {
+    const timer = setTimeout(() => {
       if (enteredFilter === inputRef.current.value) {
         const query =
           enteredFilter.length === 0
@@ -34,6 +34,16 @@ const Search = React.memo(props => {
           });
       }
     }, 500);
+
+    /* this is a cleanup function, that will execute before the next
+    time the useEffect runs
+    if we have [] as dependencied (i.e the effect only runs once)
+    the cleanup function runs when the component get unmounted
+    this insures that we have only ONE timer in memory
+    */
+    return () => {
+      clearTimeout(timer);
+    };
   }, [enteredFilter, onLoadIngredients, inputRef]);
 
   return (
